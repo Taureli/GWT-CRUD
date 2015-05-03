@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- * The async counterpart of <code>GreetingService</code>.
+ * The async counterpart
  */
 public interface CrudServiceAsync {
 	
@@ -13,4 +13,6 @@ public interface CrudServiceAsync {
 			throws IllegalArgumentException;
 
 	void getData(AsyncCallback<List<String>> asyncCallback);
+
+	void removeData(int i, AsyncCallback<String> asyncCallback);
 }

@@ -12,4 +12,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface CrudService extends RemoteService {
 	String addData(String name) throws IllegalArgumentException;
 	List<String> getData();
+	String removeData(int i);
 }

@@ -1,5 +1,6 @@
 package com.jakub.projekt.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jakub.projekt.shared.FieldVerifier;
@@ -91,6 +92,7 @@ public class GWTcrud implements EntryPoint {
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
+
 			/**
 			 * Fired when the user clicks on the sendButton.
 			 */
@@ -143,6 +145,7 @@ public class GWTcrud implements EntryPoint {
 								serverResponseLabel.setHTML(result);
 								dialogBox.center();
 								closeButton.setFocus(true);
+								getDataFromServer();
 							}
 						});
 			}
@@ -161,13 +164,65 @@ public class GWTcrud implements EntryPoint {
 								closeButton.setFocus(true);
 							}
 
-							public void onSuccess(List<String> result) {
-								for(String someText : result){
-									dataList.add(new HTML("<td>" + someText + "</td>"));
+							public void onSuccess(final List<String> result) {
+								dataList.clear();
+								for(final String someText : result){
+									Button edit = new Button("E");
+									
+									edit.addClickHandler(new ClickHandler() {
+										public void onClick(ClickEvent event) {
+											editObj(result.indexOf(someText));
+										}
+									});
+
+									Button remove = new Button("R");
+									
+									remove.addClickHandler(new ClickHandler() {
+										public void onClick(ClickEvent event) {
+											removeObj(result.indexOf(someText));
+											System.out.println("CLECK");
+										}
+									});
+									
+									dataList.add(new HTML("<tr>" + edit +
+											"  " + remove +
+											"  " + someText +
+											" </tr>"));
 								}
 							}
 						});
 			}
+			
+			private void editObj(int i){
+				
+			}
+			
+			private void removeObj(int i){
+				crudService.removeData(i,
+						new AsyncCallback<String>() {
+							public void onFailure(Throwable caught) {
+								// Show the RPC error message to the user
+								dialogBox
+										.setText("Remote Procedure Call - Failure");
+								serverResponseLabel
+										.addStyleName("serverResponseLabelError");
+								serverResponseLabel.setHTML(SERVER_ERROR);
+								dialogBox.center();
+								closeButton.setFocus(true);
+							}
+
+							public void onSuccess(String result) {
+								dialogBox.setText("Remote Procedure Call");
+								serverResponseLabel
+										.removeStyleName("serverResponseLabelError");
+								serverResponseLabel.setHTML(result);
+								dialogBox.center();
+								closeButton.setFocus(true);
+								getDataFromServer();
+							}
+						});
+			}
+			
 		}
 
 		// Add a handler to send the name to the server

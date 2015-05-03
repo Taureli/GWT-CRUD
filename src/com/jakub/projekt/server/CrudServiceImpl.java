@@ -38,6 +38,13 @@ public class CrudServiceImpl extends RemoteServiceServlet implements
 		return database;
 	}
 
+	@Override
+	public String removeData(int i) {
+		System.out.println("REMOVAL");
+		database.remove(i);
+		return "Data was removed succesfully!";
+	}
+
 	/**
 	 * Escape an html string. Escaping data received from the client helps to
 	 * prevent cross-site script vulnerabilities.
