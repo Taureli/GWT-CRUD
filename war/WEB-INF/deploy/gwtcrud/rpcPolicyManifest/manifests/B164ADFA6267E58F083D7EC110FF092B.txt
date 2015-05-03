@@ -1,0 +1,2 @@
+serviceClass: com.jakub.projekt.client.GreetingService
+path: 7ED5AA5227658773DBE9C62002CD21B7.gwt.rpc
