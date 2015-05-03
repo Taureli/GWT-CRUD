@@ -22,7 +22,7 @@ public class CrudServiceImpl extends RemoteServiceServlet implements
 			// If the input is not valid, throw an IllegalArgumentException back to
 			// the client.
 			throw new IllegalArgumentException(
-					"Name must be at least 4 characters long");
+					"Has to be 4-25 characters long");
 		}
 
 		// Escape data from the client to avoid cross-site script vulnerabilities.
@@ -40,7 +40,6 @@ public class CrudServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public String removeData(int i) {
-		System.out.println("REMOVAL");
 		database.remove(i);
 		return "Data was removed succesfully!";
 	}
