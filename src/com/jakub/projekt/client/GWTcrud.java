@@ -49,8 +49,9 @@ public class GWTcrud implements EntryPoint {
 		RootPanel.get("errorLabelContainer").add(errorLabel);
 		
 		//My panel for displaying data
-		final FlowPanel dataList = new FlowPanel();
-		RootPanel.get().add(dataList);
+		//final FlowPanel dataList = new FlowPanel();
+		//RootPanel.get().add(dataList);
+		final RootPanel dataList = RootPanel.get("listField");
 		
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
