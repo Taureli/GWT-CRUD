@@ -15,4 +15,7 @@ public interface CrudServiceAsync {
 	void getData(AsyncCallback<List<String>> asyncCallback);
 
 	void removeData(int i, AsyncCallback<String> asyncCallback);
+
+	void editData(int editID, String textToServer,
+			AsyncCallback<String> asyncCallback);
 }

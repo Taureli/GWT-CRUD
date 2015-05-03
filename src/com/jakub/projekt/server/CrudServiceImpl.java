@@ -43,6 +43,12 @@ public class CrudServiceImpl extends RemoteServiceServlet implements
 		database.remove(i);
 		return "Data was removed succesfully!";
 	}
+	
+	@Override
+	public String editData(int id, String newName) {
+		database.set(id, newName);
+		return "Data was updated succesfully!";
+	}
 
 	/**
 	 * Escape an html string. Escaping data received from the client helps to

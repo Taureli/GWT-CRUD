@@ -38,6 +38,8 @@ public class GWTcrud implements EntryPoint {
 	 */
 	private final CrudServiceAsync crudService = GWT
 			.create(CrudService.class);
+	
+	int editID;
 
 	/**
 	 * This is the entry point method.
@@ -89,6 +91,31 @@ public class GWTcrud implements EntryPoint {
 				sendButton.setFocus(true);
 			}
 		});
+		
+		//---------Edit data popup------------
+		final DialogBox editor = new DialogBox();
+		editor.setText("Edit data");
+		editor.setAnimationEnabled(true);
+		final Button closeEditButton = new Button("Close");
+		VerticalPanel editPanel = new VerticalPanel();
+		editPanel.addStyleName("dialogVPanel");
+		
+		final Button sendEditButton = new Button("Save");
+		final TextBox nameEditField = new TextBox();
+		editPanel.add(nameEditField);
+		editPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
+		editPanel.add(sendEditButton);
+		editPanel.add(closeEditButton);
+		editor.setWidget(editPanel);
+		
+		closeEditButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				editor.hide();
+				sendButton.setEnabled(true);
+				sendButton.setFocus(true);
+			}
+		});
+		//--------------------------------
 
 		// Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler, KeyUpHandler {
@@ -201,7 +228,10 @@ public class GWTcrud implements EntryPoint {
 			}
 			
 			private void editObj(int i){
-				
+				editID = i;
+				editor.center();
+				nameEditField.setFocus(true);
+				sendButton.setEnabled(false);
 			}
 			
 			private void removeObjFromServer(int i){
@@ -231,11 +261,61 @@ public class GWTcrud implements EntryPoint {
 			}
 			
 		}
+		
+		class EditHandler implements ClickHandler {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				updateDataOnServer();
+			}
+			
+			private void updateDataOnServer() {
+				// First, we validate the input.
+				errorLabel.setText("");
+				String textToServer = nameEditField.getText();
+				if (!FieldVerifier.isValidName(textToServer)) {
+					errorLabel.setText("Please enter between 4 and 25 characters");
+					return;
+				}
+
+				// Then, we send the input to the server.
+				sendEditButton.setEnabled(false);
+				textToServerLabel.setText(textToServer);
+				serverResponseLabel.setText("");
+				crudService.editData(editID, textToServer,
+						new AsyncCallback<String>() {
+							public void onFailure(Throwable caught) {
+								// Show the RPC error message to the user
+								dialogBox
+										.setText("Remote Procedure Call - Failure");
+								serverResponseLabel
+										.addStyleName("serverResponseLabelError");
+								serverResponseLabel.setHTML(SERVER_ERROR);
+								dialogBox.center();
+								closeButton.setFocus(true);
+							}
+
+							public void onSuccess(String result) {
+								dialogBox.setText("Remote Procedure Call");
+								serverResponseLabel
+										.removeStyleName("serverResponseLabelError");
+								serverResponseLabel.setHTML(result);
+								dialogBox.center();
+								closeButton.setFocus(true);
+								//MyHandler.getDataFromServer();
+							}
+						});
+			}
+		
+		}
 
 		// Add a handler to send the name to the server
 		MyHandler handler = new MyHandler();
 		sendButton.addClickHandler(handler);
 		nameField.addKeyUpHandler(handler);
+		
+		EditHandler editHandler = new EditHandler();
+		sendEditButton.addClickHandler(editHandler);
 		
 		handler.getDataFromServer();
 	}

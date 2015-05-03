@@ -7,13 +7,13 @@
 
   <!-- Servlets -->
   <servlet>
-    <servlet-name>greetServlet</servlet-name>
+    <servlet-name>crudServlet</servlet-name>
     <servlet-class>com.jakub.projekt.server.CrudServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/gwtcrud/greet</url-pattern>
+    <servlet-name>crudServlet</servlet-name>
+    <url-pattern>/gwtcrud/crudtest</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->
