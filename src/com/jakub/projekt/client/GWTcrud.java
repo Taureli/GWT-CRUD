@@ -15,9 +15,11 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -58,8 +60,9 @@ public class GWTcrud implements EntryPoint {
 		RootPanel.get("sendButtonContainer").add(sendButton);
 		RootPanel.get("errorLabelContainer").add(errorLabel);
 		
-		final RootPanel dataList = RootPanel.get("listContainer");
-
+		final FlowPanel dataList = new FlowPanel();
+		RootPanel.get().add(dataList);
+		
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
 		nameField.selectAll();
@@ -183,11 +186,8 @@ public class GWTcrud implements EntryPoint {
 									};
 
 									ClickHandler removeHandler = new ClickHandler() {
-										@Override
 										public void onClick(ClickEvent event) {
 											removeObjFromServer(result.indexOf(someText));
-											dataList.clear();
-											getDataFromServer();
 										}
 									};
 									
@@ -199,7 +199,7 @@ public class GWTcrud implements EntryPoint {
 									
 									panel.add(new HTML(someText));
 									
-									RootPanel.get().add(panel);
+									dataList.add(panel);
 									
 								}
 							}
