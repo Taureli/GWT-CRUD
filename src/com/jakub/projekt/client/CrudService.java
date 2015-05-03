@@ -1,5 +1,7 @@
 package com.jakub.projekt.client;
 
+import java.util.List;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -9,4 +11,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("greet")
 public interface CrudService extends RemoteService {
 	String addData(String name) throws IllegalArgumentException;
+	List<String> getData();
 }

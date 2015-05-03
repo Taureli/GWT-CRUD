@@ -33,6 +33,11 @@ public class CrudServiceImpl extends RemoteServiceServlet implements
 		return "New data added succesfully!";
 	}
 
+	@Override
+	public List<String> getData() {
+		return database;
+	}
+
 	/**
 	 * Escape an html string. Escaping data received from the client helps to
 	 * prevent cross-site script vulnerabilities.

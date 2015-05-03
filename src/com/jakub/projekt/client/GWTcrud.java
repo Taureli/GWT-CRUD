@@ -1,5 +1,7 @@
 package com.jakub.projekt.client;
 
+import java.util.List;
+
 import com.jakub.projekt.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -52,6 +54,8 @@ public class GWTcrud implements EntryPoint {
 		RootPanel.get("nameFieldContainer").add(nameField);
 		RootPanel.get("sendButtonContainer").add(sendButton);
 		RootPanel.get("errorLabelContainer").add(errorLabel);
+		
+		final RootPanel dataList = RootPanel.get("listContainer");
 
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
@@ -142,11 +146,35 @@ public class GWTcrud implements EntryPoint {
 							}
 						});
 			}
+			
+			private void getDataFromServer() {
+				crudService.getData(
+						new AsyncCallback<List<String>>() {
+							public void onFailure(Throwable caught) {
+								// Show the RPC error message to the user
+								dialogBox
+										.setText("Remote Procedure Call - Failure");
+								serverResponseLabel
+										.addStyleName("serverResponseLabelError");
+								serverResponseLabel.setHTML(SERVER_ERROR);
+								dialogBox.center();
+								closeButton.setFocus(true);
+							}
+
+							public void onSuccess(List<String> result) {
+								for(String someText : result){
+									dataList.add(new HTML("<td>" + someText + "</td>"));
+								}
+							}
+						});
+			}
 		}
 
 		// Add a handler to send the name to the server
 		MyHandler handler = new MyHandler();
 		sendButton.addClickHandler(handler);
 		nameField.addKeyUpHandler(handler);
+		
+		handler.getDataFromServer();
 	}
 }

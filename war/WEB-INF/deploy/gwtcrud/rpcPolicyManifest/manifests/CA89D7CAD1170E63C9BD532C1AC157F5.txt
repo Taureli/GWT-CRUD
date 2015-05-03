@@ -1,0 +1,2 @@
+serviceClass: com.jakub.projekt.client.CrudService
+path: D013F3D9A8D222A69874E84AB28FC6ED.gwt.rpc
