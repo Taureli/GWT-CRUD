@@ -16,6 +16,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -99,6 +100,7 @@ public class GWTcrud implements EntryPoint {
 			 */
 			public void onClick(ClickEvent event) {
 				sendNameToServer();
+				System.out.println("CLICK");
 			}
 
 			/**
@@ -168,8 +170,11 @@ public class GWTcrud implements EntryPoint {
 							public void onSuccess(final List<String> result) {
 								dataList.clear();
 								for(final String someText : result){
+									
+									HorizontalPanel panel = new HorizontalPanel();
+									
 									Button edit = new Button("E");
-									edit.getElement().setId(Integer.toString(result.indexOf(someText)));
+									Button remove = new Button("R");
 									
 									ClickHandler editHandler = new ClickHandler() {
 										public void onClick(ClickEvent event) {
@@ -177,24 +182,25 @@ public class GWTcrud implements EntryPoint {
 										}
 									};
 
-									Button remove = new Button("R");
-									remove.getElement().setId(Integer.toString(result.indexOf(someText)));
-									
 									ClickHandler removeHandler = new ClickHandler() {
 										@Override
 										public void onClick(ClickEvent event) {
-											//removeObj(result.indexOf(someText));
-											System.out.println("CLECK");
+											removeObjFromServer(result.indexOf(someText));
+											dataList.clear();
+											getDataFromServer();
 										}
 									};
 									
+									edit.addClickHandler(editHandler);
 									remove.addClickHandler(removeHandler);
-									remove.addHandler(removeHandler, ClickEvent.getType());
 									
-									dataList.add(new HTML("<tr>" + edit +
-											"  " + remove +
-											"  " + someText +
-											" </tr>"));
+									panel.add(edit);
+									panel.add(remove);
+									
+									panel.add(new HTML(someText));
+									
+									RootPanel.get().add(panel);
+									
 								}
 							}
 						});
@@ -204,7 +210,7 @@ public class GWTcrud implements EntryPoint {
 				
 			}
 			
-			private void removeObj(int i){
+			private void removeObjFromServer(int i){
 				crudService.removeData(i,
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
