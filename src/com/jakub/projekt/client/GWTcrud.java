@@ -11,6 +11,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -168,21 +169,27 @@ public class GWTcrud implements EntryPoint {
 								dataList.clear();
 								for(final String someText : result){
 									Button edit = new Button("E");
+									edit.getElement().setId(Integer.toString(result.indexOf(someText)));
 									
-									edit.addClickHandler(new ClickHandler() {
+									ClickHandler editHandler = new ClickHandler() {
 										public void onClick(ClickEvent event) {
 											editObj(result.indexOf(someText));
 										}
-									});
+									};
 
 									Button remove = new Button("R");
+									remove.getElement().setId(Integer.toString(result.indexOf(someText)));
 									
-									remove.addClickHandler(new ClickHandler() {
+									ClickHandler removeHandler = new ClickHandler() {
+										@Override
 										public void onClick(ClickEvent event) {
-											removeObj(result.indexOf(someText));
+											//removeObj(result.indexOf(someText));
 											System.out.println("CLECK");
 										}
-									});
+									};
+									
+									remove.addClickHandler(removeHandler);
+									remove.addHandler(removeHandler, ClickEvent.getType());
 									
 									dataList.add(new HTML("<tr>" + edit +
 											"  " + remove +
