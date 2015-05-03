@@ -8,7 +8,7 @@
   <!-- Servlets -->
   <servlet>
     <servlet-name>greetServlet</servlet-name>
-    <servlet-class>com.jakub.projekt.server.GreetingServiceImpl</servlet-class>
+    <servlet-class>com.jakub.projekt.server.CrudServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>

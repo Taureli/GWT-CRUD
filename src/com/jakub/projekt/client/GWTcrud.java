@@ -32,8 +32,8 @@ public class GWTcrud implements EntryPoint {
 	/**
 	 * Create a remote service proxy to talk to the server-side Greeting service.
 	 */
-	private final GreetingServiceAsync greetingService = GWT
-			.create(GreetingService.class);
+	private final CrudServiceAsync crudService = GWT
+			.create(CrudService.class);
 
 	/**
 	 * This is the entry point method.
@@ -41,7 +41,7 @@ public class GWTcrud implements EntryPoint {
 	public void onModuleLoad() {
 		final Button sendButton = new Button("Send");
 		final TextBox nameField = new TextBox();
-		nameField.setText("GWT User");
+		nameField.setText("Sample data");
 		final Label errorLabel = new Label();
 
 		// We can add style names to widgets
@@ -119,7 +119,7 @@ public class GWTcrud implements EntryPoint {
 				sendButton.setEnabled(false);
 				textToServerLabel.setText(textToServer);
 				serverResponseLabel.setText("");
-				greetingService.greetServer(textToServer,
+				crudService.addData(textToServer,
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
 								// Show the RPC error message to the user
