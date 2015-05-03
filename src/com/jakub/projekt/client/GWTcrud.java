@@ -21,9 +21,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-/**
- * Entry point classes define <code>onModuleLoad()</code>.
- */
 public class GWTcrud implements EntryPoint {
 	/**
 	 * The message displayed to the user when the server cannot be reached or
@@ -33,32 +30,25 @@ public class GWTcrud implements EntryPoint {
 			+ "attempting to contact the server. Please check your network "
 			+ "connection and try again.";
 
-	/**
-	 * Create a remote service proxy to talk to the server-side Greeting service.
-	 */
-	private final CrudServiceAsync crudService = GWT
-			.create(CrudService.class);
+	//remote service proxy
+	private final CrudServiceAsync crudService = GWT.create(CrudService.class);
 	
+	//Little helpful variable for editing data
 	int editID;
 
-	/**
-	 * This is the entry point method.
-	 */
+	//entry point method
 	public void onModuleLoad() {
 		final Button sendButton = new Button("Send");
 		final TextBox nameField = new TextBox();
 		nameField.setText("Sample data");
 		final Label errorLabel = new Label();
-
-		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
 
-		// Add the nameField and sendButton to the RootPanel
-		// Use RootPanel.get() to get the entire body element
 		RootPanel.get("nameFieldContainer").add(nameField);
 		RootPanel.get("sendButtonContainer").add(sendButton);
 		RootPanel.get("errorLabelContainer").add(errorLabel);
 		
+		//My panel for displaying data
 		final FlowPanel dataList = new FlowPanel();
 		RootPanel.get().add(dataList);
 		
@@ -118,28 +108,13 @@ public class GWTcrud implements EntryPoint {
 		//--------------------------------
 
 		// Create a handler for the sendButton and nameField
-		class MyHandler implements ClickHandler, KeyUpHandler {
+		class MyHandler implements ClickHandler {
 
-			/**
-			 * Fired when the user clicks on the sendButton.
-			 */
 			public void onClick(ClickEvent event) {
-				sendNameToServer();
+				sendDataToServer();
 			}
 
-			/**
-			 * Fired when the user types in the nameField.
-			 */
-			public void onKeyUp(KeyUpEvent event) {
-				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					sendNameToServer();
-				}
-			}
-
-			/**
-			 * Send the name from the nameField to the server and wait for a response.
-			 */
-			private void sendNameToServer() {
+			private void sendDataToServer() {
 				// First, we validate the input.
 				errorLabel.setText("");
 				String textToServer = nameField.getText();
@@ -156,10 +131,8 @@ public class GWTcrud implements EntryPoint {
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
 								// Show the RPC error message to the user
-								dialogBox
-										.setText("Remote Procedure Call - Failure");
-								serverResponseLabel
-										.addStyleName("serverResponseLabelError");
+								dialogBox.setText("Remote Procedure Call - Failure");
+								serverResponseLabel.addStyleName("serverResponseLabelError");
 								serverResponseLabel.setHTML(SERVER_ERROR);
 								dialogBox.center();
 								closeButton.setFocus(true);
@@ -167,8 +140,7 @@ public class GWTcrud implements EntryPoint {
 
 							public void onSuccess(String result) {
 								dialogBox.setText("Remote Procedure Call");
-								serverResponseLabel
-										.removeStyleName("serverResponseLabelError");
+								serverResponseLabel.removeStyleName("serverResponseLabelError");
 								serverResponseLabel.setHTML(result);
 								dialogBox.center();
 								closeButton.setFocus(true);
@@ -182,10 +154,8 @@ public class GWTcrud implements EntryPoint {
 						new AsyncCallback<List<String>>() {
 							public void onFailure(Throwable caught) {
 								// Show the RPC error message to the user
-								dialogBox
-										.setText("Remote Procedure Call - Failure");
-								serverResponseLabel
-										.addStyleName("serverResponseLabelError");
+								dialogBox.setText("Remote Procedure Call - Failure");
+								serverResponseLabel.addStyleName("serverResponseLabelError");
 								serverResponseLabel.setHTML(SERVER_ERROR);
 								dialogBox.center();
 								closeButton.setFocus(true);
@@ -196,7 +166,6 @@ public class GWTcrud implements EntryPoint {
 								for(final String someText : result){
 									
 									HorizontalPanel panel = new HorizontalPanel();
-									
 									Button edit = new Button("E");
 									Button remove = new Button("R");
 									
@@ -205,7 +174,6 @@ public class GWTcrud implements EntryPoint {
 											editObj(result.indexOf(someText));
 										}
 									};
-
 									ClickHandler removeHandler = new ClickHandler() {
 										public void onClick(ClickEvent event) {
 											removeObjFromServer(result.indexOf(someText));
@@ -217,7 +185,6 @@ public class GWTcrud implements EntryPoint {
 									
 									panel.add(edit);
 									panel.add(remove);
-									
 									panel.add(new HTML(someText));
 									
 									dataList.add(panel);
@@ -239,10 +206,8 @@ public class GWTcrud implements EntryPoint {
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
 								// Show the RPC error message to the user
-								dialogBox
-										.setText("Remote Procedure Call - Failure");
-								serverResponseLabel
-										.addStyleName("serverResponseLabelError");
+								dialogBox.setText("Remote Procedure Call - Failure");
+								serverResponseLabel.addStyleName("serverResponseLabelError");
 								serverResponseLabel.setHTML(SERVER_ERROR);
 								dialogBox.center();
 								closeButton.setFocus(true);
@@ -250,8 +215,7 @@ public class GWTcrud implements EntryPoint {
 
 							public void onSuccess(String result) {
 								dialogBox.setText("Remote Procedure Call");
-								serverResponseLabel
-										.removeStyleName("serverResponseLabelError");
+								serverResponseLabel.removeStyleName("serverResponseLabelError");
 								serverResponseLabel.setHTML(result);
 								dialogBox.center();
 								closeButton.setFocus(true);
@@ -280,29 +244,30 @@ public class GWTcrud implements EntryPoint {
 
 				// Then, we send the input to the server.
 				sendEditButton.setEnabled(false);
-				textToServerLabel.setText(textToServer);
+				nameEditField.setText("");
 				serverResponseLabel.setText("");
 				crudService.editData(editID, textToServer,
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
 								// Show the RPC error message to the user
-								dialogBox
-										.setText("Remote Procedure Call - Failure");
-								serverResponseLabel
-										.addStyleName("serverResponseLabelError");
+								dialogBox.setText("Remote Procedure Call - Failure");
+								serverResponseLabel.addStyleName("serverResponseLabelError");
 								serverResponseLabel.setHTML(SERVER_ERROR);
 								dialogBox.center();
 								closeButton.setFocus(true);
+								sendEditButton.setEnabled(true);
 							}
 
 							public void onSuccess(String result) {
 								dialogBox.setText("Remote Procedure Call");
-								serverResponseLabel
-										.removeStyleName("serverResponseLabelError");
+								serverResponseLabel.removeStyleName("serverResponseLabelError");
 								serverResponseLabel.setHTML(result);
 								dialogBox.center();
+								sendEditButton.setEnabled(true);
+								editor.hide();
 								closeButton.setFocus(true);
-								//MyHandler.getDataFromServer();
+								MyHandler temp = new MyHandler();
+								temp.getDataFromServer();
 							}
 						});
 			}
@@ -312,7 +277,6 @@ public class GWTcrud implements EntryPoint {
 		// Add a handler to send the name to the server
 		MyHandler handler = new MyHandler();
 		sendButton.addClickHandler(handler);
-		nameField.addKeyUpHandler(handler);
 		
 		EditHandler editHandler = new EditHandler();
 		sendEditButton.addClickHandler(editHandler);
